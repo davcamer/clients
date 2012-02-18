@@ -73,6 +73,12 @@ public class TeamCityUrlBuilderTest {
         String changeUrl = builder.getChange("3");
         assertEquals(TEAM_CITY_URL + "/app/rest/changes/id:3", changeUrl);
     }
+    
+    @Test
+    public void should_create_valid_username_url() {
+        String usernameUrl = builder.getUserByUsername("davcamer");
+        assertEquals(TEAM_CITY_URL + "/app/rest/users/username:davcamer", usernameUrl);
+    }
 
     @Test
     public void should_create_pom_url() {

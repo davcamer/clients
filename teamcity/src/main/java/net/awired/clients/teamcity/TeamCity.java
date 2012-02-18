@@ -34,6 +34,7 @@ import net.awired.clients.teamcity.exception.TeamCityBuildTypeNotFoundException;
 import net.awired.clients.teamcity.exception.TeamCityChangesNotFoundException;
 import net.awired.clients.teamcity.exception.TeamCityProjectNotFoundException;
 import net.awired.clients.teamcity.exception.TeamCityProjectsNotFoundException;
+import net.awired.clients.teamcity.exception.TeamCityUserNotFoundException;
 import net.awired.clients.teamcity.resource.TeamCityAbstractBuild;
 import net.awired.clients.teamcity.resource.TeamCityBuild;
 import net.awired.clients.teamcity.resource.TeamCityBuildItem;
@@ -43,6 +44,7 @@ import net.awired.clients.teamcity.resource.TeamCityChange;
 import net.awired.clients.teamcity.resource.TeamCityChanges;
 import net.awired.clients.teamcity.resource.TeamCityProject;
 import net.awired.clients.teamcity.resource.TeamCityProjects;
+import net.awired.clients.teamcity.resource.TeamCityUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,6 +163,16 @@ public class TeamCity {
             }
         }
         return changesList;
+    }
+
+    public TeamCityUser findUserByUsername(String username) throws TeamCityUserNotFoundException {
+        checkNotNull(username, "username is mandatory");
+        try {
+            String userUrl = urlBuilder.getUserByUsername(username);
+            return client.resource(userUrl, TeamCityUser.class);
+        } catch (ResourceNotFoundException e) {
+            throw new TeamCityUserNotFoundException("User with username " + username + " has not been found", e);
+        }
     }
 
     public TeamCityBuild findRunningBuild() throws TeamCityBuildNotFoundException {
